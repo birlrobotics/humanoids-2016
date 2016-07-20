@@ -135,17 +135,31 @@ mkdir build
 cd build
 cmake .. -DCODYCO_BUILD_OCRA_MODULES=TRUE
 make -j$(nproc)
+```
+At this point if you run `source ~/.bashrc`(Ubuntu) or `source ~/.bash_profile`(OSX) you shouldn't get any errors.
+
+The line `make -j$(nproc)` simply multi-threads the compilation process making it faster. Assuming everything went according to plan we now have to do a little trickiness to get the right branch of the underlying Whole-Body controller.
+
+First we will delete everything we just built... :sad: I know.
+
+```shell
+cd $CODYCO_SUPERBUILD_ROOT/build
+rm -rf *
+```
+Now let's checkout the `humanoids_2016_demo` branches.
+```shell
 cd $CODYCO_SUPERBUILD_ROOT/libraries/ocra-recipes
-git checkout humanoids_2016_demo
+git checkout -b humanoids_2016_demo origin/humanoids_2016_demo
 cd $CODYCO_SUPERBUILD_ROOT/main/ocra-recipes
-git checkout humanoids_2016_demo
+git checkout -b humanoids_2016_demo origin/humanoids_2016_demo
+```
+And we can rebuild.
+```shell
 cd $CODYCO_SUPERBUILD_ROOT/build
 make -j$(nproc)
 ```
 
-The line `make -j$(nproc)` simply multi-threads the compilation process making it faster.
 
-At this point if you run `source ~/.bashrc`(Ubuntu) or `source ~/.bash_profile`(OSX) you shouldn't get any errors.
 
 
 ### 4. Get simulation tools
@@ -173,16 +187,16 @@ else
 fi
 ```
 
-#### [`humanoids-2016-models`]()
+#### [`humanoids-2016-models`](https://github.com/rlober/humanoids-2016-models)
 
 To run the article simulation scenarios we need some custom models.
 
 ```shell
 cd $HUMANOIDS_2016
-git clone
+git clone https://github.com/rlober/humanoids-2016-models.git
 ```
 
-Again we need to extended the model path in the `~/.bashrc` (Ubuntu) or `~/.bash_profile`(OSX) file. Add the following to the end of your file: 
+Again we need to extended the model path in the `~/.bashrc` (Ubuntu) or `~/.bash_profile`(OSX) file. Add the following to the end of your file:
 
 ```shell
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$HUMANOIDS_2016/humanoids-2016-models
@@ -203,13 +217,13 @@ make install
 ```
 
 
-#### [`humanoids-2016-plugins`]()
+#### [`humanoids-2016-plugins`](https://github.com/rlober/humanoids-2016-plugins)
 
 These gazebo plugins will allow the specific scenario simulations to function properly.
 
 ```shell
 cd $HUMANOIDS_2016
-git clone
+git clone https://github.com/rlober/humanoids-2016-plugins.git
 cd humanoids-2016-plugins
 mkdir build
 cd build
@@ -220,7 +234,7 @@ make install
 At the bottom of your `~/.bashrc` (Ubuntu) or `~/.bash_profile`(OSX) file add the following:
 
 ```shell
-export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:$HUMANOIDS_2016/install/lib
+export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:$HUMANOIDS_2016/install/lib
 ```
 
 Now open a terminal and run:
@@ -271,4 +285,27 @@ taskOptimizer
 **Terminal 4**
 ```shell
 wocraController --sequence ObstacleAvoidance
+```
+
+
+### Move a Heavy Weight
+
+**Terminal 1**
+```shell
+yarpserver
+```
+
+**Terminal 2**
+```shell
+gazebo $HUMANOIDS_2016/humanoids-2016-models/move_weight.world
+```
+
+**Terminal 3**
+```shell
+taskOptimizer
+```
+
+**Terminal 4**
+```shell
+wocraController --floatingBase --sequence MoveWeight
 ```
