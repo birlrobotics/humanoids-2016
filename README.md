@@ -300,12 +300,19 @@ yarpserver
 gazebo $HUMANOIDS_2016/humanoids-2016-models/move_weight.world
 ```
 
+
 **Terminal 3**
+```shell
+yarpmotorgui --from $HUMANOIDS_2016/humanoids-2016-models/conf/yarpMotorGui.ini
+```
+Click `Ok` then `Home All`. Let the robot get into its starting position. 
+
+**Terminal 4**
 ```shell
 taskOptimizer
 ```
 
-**Terminal 4**
+**Terminal 5**
 ```shell
 wocraController --floatingBase --sequence MoveWeight
 ```
