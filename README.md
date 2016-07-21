@@ -1,3 +1,11 @@
+### WARNING
+
+Right now the internal yarp ports for the [`humanoids-2016-plugins`](#plugins) do not seem to be reading properly. Everything compiles properly but no external communication is possible. *Fix is scheduled for the middle to end of August 2016.* 
+
+**Effects:**
+- The Obstacle Avoidance scenario will not run properly.
+- The Move a Heavy Weight scenario will run properly but without visualization. Additionally this scenario must start with the feet fixed to the ground and then detaches them. Because we cannot communicate, the feet do not detach.
+
 # Efficient Reinforcement Learning for Humanoid Whole-Body Control
 
 #### Ryan Lober, Olivier Sigaud, Vincent Padois
@@ -202,7 +210,7 @@ Again we need to extended the model path in the `~/.bashrc` (Ubuntu) or `~/.bash
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$HUMANOIDS_2016/humanoids-2016-models
 ```
 
-#### [`gazebo-yarp-plugins`](https://github.com/robotology/gazebo-yarp-plugins)
+#### [`gazebo-yarp-plugins`](https://github.com/robotology/gazebo-yarp-plugins) <a id="plugins"></a>
 
 To enable the iCub/YARP software to control the iCub models in gazebo we need to download the plugins.
 
@@ -305,7 +313,7 @@ gazebo $HUMANOIDS_2016/humanoids-2016-models/move_weight.world
 ```shell
 yarpmotorgui --from $HUMANOIDS_2016/humanoids-2016-models/conf/yarpMotorGui.ini
 ```
-Click `Ok` then `Home All`. Let the robot get into its starting position. 
+Click `Ok` then `Home All`. Let the robot get into its starting position.
 
 **Terminal 4**
 ```shell
